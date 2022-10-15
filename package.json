@@ -1,0 +1,36 @@
+{
+    "name": "my_react_template",
+    "version": "1.0.0",
+    "homepage": "./",
+    "dependencies": {
+        "@types/node": "^18.11.0",
+        "@types/react": "^18.0.21",
+        "@types/react-dom": "^18.0.6",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.4.2",
+        "typescript": "^4.8.4"
+    },
+    "scripts": {
+        "start": "vite",
+        "build": "tsc --noEmit && vite build",
+        "serve": "vite preview",
+        "test": "vitest run",
+        "uplib": "npx npm-check-updates -u && npm i"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app"
+        ]
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.40.0",
+        "@typescript-eslint/parser": "^5.40.0",
+        "@vitejs/plugin-react": "^2.1.0",
+        "autoprefixer": "^10.4.12",
+        "eslint": "^8.25.0",
+        "eslint-plugin-react": "^7.31.10",
+        "vite": "^3.1.8",
+        "vitest": "^0.24.3"
+    }
+}
