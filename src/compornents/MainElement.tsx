@@ -10,7 +10,7 @@ export default function MainElement() {
     useEffect(() => {
         const boidsArray = [];
         for (let i = 0; i < 30; i++) {
-            const boid = new Boid({ x: (Math.random() * 500 | 0), y: (Math.random() * 500 | 0) });
+            const boid = new Boid(i, { x: (Math.random() * 500 | 0), y: (Math.random() * 500 | 0) });
             boidsArray.push(boid);
         }
         setBoids(boidsArray);
