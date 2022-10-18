@@ -2,9 +2,10 @@ import { Boid } from "../models/Boid";
 import { Point } from "../models/Point";
 
 export class Utils {
-    static personalSpace = 50;
-    static maxSpeedPersonalSpace = 30;
+    static personalSpace = 30;
+    static maxSpeedPersonalSpace = 5;
     static maxSpeedCenterOfMass = 5;
+    static maxSpeedTrend = 5;
     static maxDistance = 500;
 
     // 隣人を取得
@@ -49,6 +50,17 @@ export class Utils {
         return { x: x, y: y };
     }
 
+    // みんなのトレンド
+    static getTrend(we: Boid[]): Point {
+        const x = we
+            .map(b => (b.VectorTrend?.x ?? 0) + (b.VectorCenterOfMass?.x ?? 0) + (b.VectorPersonalSpace?.x ?? 0))
+            .reduce((a, b) => a + b) / (we.length * 2);
+        const y = we
+            .map(b => (b.VectorTrend?.y ?? 0) + (b.VectorCenterOfMass?.y ?? 0) + (b.VectorPersonalSpace?.y ?? 0))
+            .reduce((a, b) => a + b) / (we.length * 2);
+        return { x: x, y: y };
+    }
+
     static addVectorPersonalSpace(me: Boid, we: Boid[]): Boid {
         const top = Utils.getMyNeighbor(me, we);
         const topBoid = we.filter(b => b.Id === top)[0];
@@ -59,8 +71,8 @@ export class Utils {
             speed = Utils.maxSpeedPersonalSpace * (1 - distance / Utils.personalSpace);
             angle = Utils.getAngle(me.Position, topBoid.Position) + Math.PI;
         } else if (distance > Utils.personalSpace) {
-            speed = Utils.maxSpeedPersonalSpace * (distance / Utils.maxDistance);
-            angle = Utils.getAngle(me.Position, topBoid.Position);
+            // speed = Utils.maxSpeedPersonalSpace * (distance / Utils.maxDistance);
+            // angle = Utils.getAngle(me.Position, topBoid.Position);
         }
         const b = me.clone();
         b.VectorPersonalSpace = {
@@ -77,6 +89,19 @@ export class Utils {
         const angle = Utils.getAngle(me.Position, center);
         const b = me.clone();
         b.VectorCenterOfMass = {
+            x: Utils.getXByAngle(speed, angle),
+            y: Utils.getYByAngle(speed, angle)
+        };
+        return b;
+    }
+
+    static addVectorTrend(me: Boid, we: Boid[]): Boid {
+        const trend = Utils.getTrend(we);
+        const distance = Utils.getDistance(me.Position, trend);
+        const speed = Utils.maxSpeedTrend * (distance / Utils.maxDistance);
+        const angle = Utils.getAngle(me.Position, trend);
+        const b = me.clone();
+        b.VectorTrend = {
             x: Utils.getXByAngle(speed, angle),
             y: Utils.getYByAngle(speed, angle)
         };

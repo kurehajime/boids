@@ -30,6 +30,9 @@ export default function MainElement() {
                     return Utils.addVectorCenterOfMass(boid, boids);
                 })
                 .map(boid => {
+                    return Utils.addVectorTrend(boid, boids);
+                })
+                .map(boid => {
                     return boid.update();
                 });
             setBoids(boidsArray);

@@ -6,6 +6,7 @@ export class Boid {
     Position: Point;
     VectorPersonalSpace: Point | null = null;
     VectorCenterOfMass: Point | null = null;
+    VectorTrend: Point | null = null;
 
     constructor(id: number, position: Point) {
         this.Id = id;
@@ -22,6 +23,10 @@ export class Boid {
             b.Position.x += b.VectorCenterOfMass.x;
             b.Position.y += b.VectorCenterOfMass.y;
         }
+        if (b.VectorTrend) {
+            b.Position.x += b.VectorTrend.x;
+            b.Position.y += b.VectorTrend.y;
+        }
         b.Position.x = Math.max(b.Position.x, 0);
         b.Position.x = Math.min(b.Position.x, Utils.maxDistance);
         b.Position.y = Math.max(b.Position.y, 0);
@@ -33,6 +38,7 @@ export class Boid {
         const b = new Boid(this.Id, this.Position);
         b.VectorPersonalSpace = this.VectorPersonalSpace;
         b.VectorCenterOfMass = this.VectorCenterOfMass;
+        b.VectorTrend = this.VectorTrend;
         return b;
     }
 }
