@@ -5,6 +5,6 @@ type Props = {
 }
 export default function BoidElement(props: Props) {
     return (
-        <circle cx={props.boid.Position.x} cy={props.boid.Position.y} r={5} fill="blue" />
+        <circle className="boid" cx={props.boid.Position.x} cy={props.boid.Position.y} r={5} fill="blue" />
     )
 }

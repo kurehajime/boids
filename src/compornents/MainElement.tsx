@@ -8,7 +8,7 @@ import { Utils } from "../statics/Utils";
 export default function MainElement() {
     const FieldSize = 500;
     const [boids, setBoids] = useState<Boid[]>([]);
-    const { time: time, start: start, pause: pause, reset: reset } = useTimer({ interval: 50 })
+    const { time: time, start: start, pause: pause, reset: reset } = useTimer({ interval: 100 })
 
     useEffect(() => {
         const boidsArray = [];

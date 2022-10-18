@@ -2,7 +2,7 @@ import { Boid } from "../models/Boid";
 
 export class Utils {
     static personalSpace = 30;
-    static maxSpeed = 20;
+    static maxSpeed = 30;
     static maxDistance = 500;
 
     // 隣人を取得
