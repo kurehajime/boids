@@ -2,9 +2,9 @@ import { Boid } from "../models/Boid";
 import { Point } from "../models/Point";
 
 export class Utils {
-    static personalSpace = 30;
+    static personalSpace = 50;
     static maxSpeedPersonalSpace = 30;
-    static maxSpeedCenterOfMass = 10;
+    static maxSpeedCenterOfMass = 5;
     static maxDistance = 500;
 
     // 隣人を取得
