@@ -22,10 +22,16 @@ export default function MainElement() {
 
     useEffect(() => {
         if (time > 0) {
-            const boidsArray = boids.map(boid => {
-                const newBoid = Utils.addVectorPersonalSpace(boid, boids);
-                return newBoid.update();
-            })
+            const boidsArray = boids
+                .map(boid => {
+                    return Utils.addVectorPersonalSpace(boid, boids);
+                })
+                .map(boid => {
+                    return Utils.addVectorCenterOfMass(boid, boids);
+                })
+                .map(boid => {
+                    return boid.update();
+                });
             setBoids(boidsArray);
         }
     }, [time])
