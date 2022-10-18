@@ -15,6 +15,11 @@ export class Boid {
         if (b.VectorPersonalSpace) {
             b.Position.x += b.VectorPersonalSpace.x;
             b.Position.y += b.VectorPersonalSpace.y;
+
+            b.Position.x = Math.max(b.Position.x, 0);
+            b.Position.x = Math.min(b.Position.x, 500);
+            b.Position.y = Math.max(b.Position.y, 0);
+            b.Position.y = Math.min(b.Position.y, 500);
         }
         return b;
     }
