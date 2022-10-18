@@ -36,6 +36,9 @@ export default function MainElement() {
                     return Utils.addVectorTrend(boid, boids);
                 })
                 .map(boid => {
+                    return Utils.addVectorEscape(boid, enemy);
+                })
+                .map(boid => {
                     return boid.update();
                 });
             setBoids(boidsArray);

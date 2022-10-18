@@ -1,11 +1,15 @@
 import { Boid } from "../models/Boid";
+import { Enemy } from "../models/Enemy";
 import { Point } from "../models/Point";
 
 export class Utils {
-    static personalSpace = 30;
-    static maxSpeedPersonalSpace = 5;
+    static personalSpace = 50;
+    static groupDistance = 100;
+    static enemyDistance = 200;
+    static maxSpeedPersonalSpace = 10;
+    static maxSpeedEnemy = 20;
     static maxSpeedCenterOfMass = 5;
-    static maxSpeedTrend = 5;
+    static maxSpeedTrend = 30;
     static maxDistance = 500;
 
     // 隣人を取得
@@ -21,6 +25,13 @@ export class Utils {
             .sort((a, b) => a.distance - b.distance)[0]
             .id;
         return top;
+    }
+
+    static getGroup(me: Boid, we: Boid[]): Boid[] {
+        return we.filter(b => {
+            const distance = Utils.getDistance(me.Position, b.Position);
+            return distance < Utils.groupDistance;
+        });
     }
 
     // 距離を取得
@@ -53,10 +64,10 @@ export class Utils {
     // みんなのトレンド
     static getTrend(we: Boid[]): Point {
         const x = we
-            .map(b => (b.VectorTrend?.x ?? 0) + (b.VectorCenterOfMass?.x ?? 0) + (b.VectorPersonalSpace?.x ?? 0))
+            .map(b => (b.VectorCenterOfMass?.x ?? 0) + (b.VectorCenterOfMass?.x ?? 0) + (b.VectorCenterOfMass?.x ?? 0) + (b.VectorPersonalSpace?.x ?? 0))
             .reduce((a, b) => a + b) / (we.length * 2);
         const y = we
-            .map(b => (b.VectorTrend?.y ?? 0) + (b.VectorCenterOfMass?.y ?? 0) + (b.VectorPersonalSpace?.y ?? 0))
+            .map(b => (b.VectorCenterOfMass?.y ?? 0) + (b.VectorCenterOfMass?.y ?? 0) + (b.VectorCenterOfMass?.y ?? 0) + (b.VectorPersonalSpace?.y ?? 0))
             .reduce((a, b) => a + b) / (we.length * 2);
         return { x: x, y: y };
     }
@@ -83,7 +94,8 @@ export class Utils {
     }
 
     static addVectorCenterOfMass(me: Boid, we: Boid[]): Boid {
-        const center = Utils.getAvaregePosition(we);
+        const group = Utils.getGroup(me, we);
+        const center = Utils.getAvaregePosition(group);
         const distance = Utils.getDistance(me.Position, center);
         const speed = Utils.maxSpeedCenterOfMass * (distance / Utils.maxDistance);
         const angle = Utils.getAngle(me.Position, center);
@@ -96,12 +108,25 @@ export class Utils {
     }
 
     static addVectorTrend(me: Boid, we: Boid[]): Boid {
-        const trend = Utils.getTrend(we);
-        const distance = Utils.getDistance(me.Position, trend);
-        const speed = Utils.maxSpeedTrend * (distance / Utils.maxDistance);
-        const angle = Utils.getAngle(me.Position, trend);
+        const group = Utils.getGroup(me, we);
+        const trend = Utils.getTrend(group);
         const b = me.clone();
         b.VectorTrend = {
+            x: trend.x * this.maxSpeedTrend,
+            y: trend.y * this.maxSpeedTrend
+        };
+        return b;
+    }
+    static addVectorEscape(me: Boid, enemy: Enemy): Boid {
+        const distance = Utils.getDistance(me.Position, enemy.Position);
+        let speed = 0;
+        let angle = 0;
+        if (distance < Utils.enemyDistance) {
+            speed = Utils.maxSpeedEnemy * (1 - distance / Utils.enemyDistance);
+            angle = Utils.getAngle(me.Position, enemy.Position) + Math.PI;
+        }
+        const b = me.clone();
+        b.VectorEscape = {
             x: Utils.getXByAngle(speed, angle),
             y: Utils.getYByAngle(speed, angle)
         };

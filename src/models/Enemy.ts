@@ -5,7 +5,7 @@ export class Enemy {
     Position: Point;
     Angle = 0;
     Turn = true;
-    Speed = 10;
+    Speed = 20;
 
     constructor(position: Point) {
         this.Position = position;
@@ -24,10 +24,10 @@ export class Enemy {
         b.Position.x += Math.cos(b.Angle) * this.Speed;
         b.Position.y += Math.sin(b.Angle) * this.Speed;
 
-        b.Position.x = Math.max(b.Position.x, 0);
-        b.Position.x = Math.min(b.Position.x, Utils.maxDistance);
-        b.Position.y = Math.max(b.Position.y, 0);
-        b.Position.y = Math.min(b.Position.y, Utils.maxDistance);
+        b.Position.x = Math.max(b.Position.x, -10);
+        b.Position.x = Math.min(b.Position.x, Utils.maxDistance + 10);
+        b.Position.y = Math.max(b.Position.y, -10);
+        b.Position.y = Math.min(b.Position.y, Utils.maxDistance + 10);
 
         return b;
     }

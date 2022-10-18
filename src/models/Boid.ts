@@ -7,6 +7,7 @@ export class Boid {
     VectorPersonalSpace: Point | null = null;
     VectorCenterOfMass: Point | null = null;
     VectorTrend: Point | null = null;
+    VectorEscape: Point | null = null;
 
     constructor(id: number, position: Point) {
         this.Id = id;
@@ -27,10 +28,14 @@ export class Boid {
             b.Position.x += b.VectorTrend.x;
             b.Position.y += b.VectorTrend.y;
         }
-        b.Position.x = Math.max(b.Position.x, 0);
-        b.Position.x = Math.min(b.Position.x, Utils.maxDistance);
-        b.Position.y = Math.max(b.Position.y, 0);
-        b.Position.y = Math.min(b.Position.y, Utils.maxDistance);
+        if (b.VectorEscape) {
+            b.Position.x += b.VectorEscape.x;
+            b.Position.y += b.VectorEscape.y;
+        }
+        b.Position.x = Math.max(b.Position.x, 10);
+        b.Position.x = Math.min(b.Position.x, Utils.maxDistance - 10);
+        b.Position.y = Math.max(b.Position.y, 10);
+        b.Position.y = Math.min(b.Position.y, Utils.maxDistance - 10);
         return b;
     }
 
@@ -39,6 +44,7 @@ export class Boid {
         b.VectorPersonalSpace = this.VectorPersonalSpace;
         b.VectorCenterOfMass = this.VectorCenterOfMass;
         b.VectorTrend = this.VectorTrend;
+        b.VectorEscape = this.VectorEscape;
         return b;
     }
 }
