@@ -4,10 +4,13 @@ import BoidElement from "./BoidElement";
 import "./MainElement.css";
 import { useTimer } from 'use-timer'
 import { Utils } from "../statics/Utils";
+import { Enemy } from "../models/Enemy";
+import EnemyElement from "./EnemyElement";
 
 export default function MainElement() {
     const FieldSize = 500;
     const [boids, setBoids] = useState<Boid[]>([]);
+    const [enemy, setEnemy] = useState<Enemy>(new Enemy({ x: 250, y: 250 }));
     const { time: time, start: start, pause: pause, reset: reset } = useTimer({ interval: 100 })
 
     useEffect(() => {
@@ -36,6 +39,7 @@ export default function MainElement() {
                     return boid.update();
                 });
             setBoids(boidsArray);
+            setEnemy(enemy.update());
         }
     }, [time])
 
@@ -50,6 +54,9 @@ export default function MainElement() {
                             key={index}
                         />)
                     })
+                }
+                {
+                    <EnemyElement enemy={enemy} />
                 }
             </svg>
         </div >
