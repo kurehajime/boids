@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { Boid } from "../models/Boid";
 import BoidElement from "./BoidElement";
 import "./MainElement.css";
+import { useTimer } from 'use-timer'
+import { Utils } from "../statics/Utils";
 
 export default function MainElement() {
     const FieldSize = 500;
     const [boids, setBoids] = useState<Boid[]>([]);
+    const { time: time, start: start, pause: pause, reset: reset } = useTimer({ interval: 50 })
 
     useEffect(() => {
         const boidsArray = [];
@@ -14,7 +17,18 @@ export default function MainElement() {
             boidsArray.push(boid);
         }
         setBoids(boidsArray);
+        start();
     }, [])
+
+    useEffect(() => {
+        if (time > 0) {
+            const boidsArray = boids.map(boid => {
+                const newBoid = Utils.addVectorPersonalSpace(boid, boids);
+                return newBoid.update();
+            })
+            setBoids(boidsArray);
+        }
+    }, [time])
 
 
     return (

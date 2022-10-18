@@ -2,6 +2,8 @@ import { Boid } from "../models/Boid";
 
 export class Utils {
     static personalSpace = 30;
+    static maxSpeed = 20;
+    static maxDistance = 500;
 
     // 隣人を取得
     static getMyNeighbor(me: Boid, we: Boid[]): number {
@@ -42,11 +44,20 @@ export class Utils {
         const top = Utils.getMyNeighbor(me, we);
         const topBoid = we.filter(b => b.Id === top)[0];
         const distance = Utils.getDistance(me, topBoid);
+        let speed = 0;
+        let angle = 0;
         if (distance < Utils.personalSpace) {
-            // 
+            speed = Utils.maxSpeed * (1 - distance / Utils.personalSpace);
+            angle = Utils.getAngle(me, topBoid) + Math.PI;
         } else if (distance > Utils.personalSpace) {
-            // 
+            speed = Utils.maxSpeed * (distance / Utils.maxDistance);
+            angle = Utils.getAngle(me, topBoid);
         }
-        return me;
+        const b = me.clone();
+        b.VectorPersonalSpace = {
+            x: Utils.getXByAngle(speed, angle),
+            y: Utils.getYByAngle(speed, angle)
+        };
+        return b;
     }
 }
